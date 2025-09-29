@@ -1,0 +1,41 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Match all documents in the jobs collection
+    match /jobs/{jobId} {
+      // Allow all read/write for development (remove in production)
+      allow read, write: if true;
+      
+      // Production rules (commented out for now)
+      /*
+      // Allow read access if user is authenticated
+      allow read: if request.auth != null;
+      
+      // Allow create/update if user is authenticated and the document has required fields
+      allow create: if 
+        request.auth != null &&
+        request.resource.data.keys().hasAll(['company', 'role', 'dateApplied', 'status']) &&
+        request.resource.data.company is string &&
+        request.resource.data.role is string &&
+        request.resource.data.dateApplied is timestamp &&
+        request.resource.data.status is string &&
+        request.resource.data.status in ['applied', 'interviewing', 'offer', 'rejected'];
+        
+      // Allow update if user is authenticated and only certain fields are being updated
+      allow update: if 
+        request.auth != null &&
+        (
+          // Allow status updates
+          (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']) && 
+           request.resource.data.status is string &&
+           request.resource.data.status in ['applied', 'interviewing', 'offer', 'rejected']) ||
+          // Or allow notes updates
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['notes'])
+        );
+        
+      // Allow delete if user is authenticated
+      allow delete: if request.auth != null;
+      */
+    }
+  }
+}
